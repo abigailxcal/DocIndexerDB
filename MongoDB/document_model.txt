@@ -1,0 +1,18 @@
+{
+    "Documents": {
+        "doc_number":String,
+        "text": String,
+        "title": String,
+        "num_chars": Int32,
+        "date": String,
+        "category": {
+            "category_name":String }, 
+        "terms": [
+            {
+                "term":String,
+                "term_count": Int32,
+                "num_chars":Int32
+            }
+        ]
+    }
+}
