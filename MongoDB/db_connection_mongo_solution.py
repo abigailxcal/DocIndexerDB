@@ -62,15 +62,10 @@ def createDocument(col, docId, docText, docTitle, docDate, docCat):
     col.insert_one(document)
 
 
-
-
-
-
-
-
 def deleteDocument(col, docId):
     # Delete the document from the database
     col.delete_one({"_id":docId})
+
 
 def updateDocument(col, docId, docText, docTitle, docDate, docCat):
     # Delete the document
@@ -81,14 +76,10 @@ def updateDocument(col, docId, docText, docTitle, docDate, docCat):
     
 
 
-
-
-
 def getIndex(col):
+
     # Query the database to return the documents where each term occurs with their corresponding count. Output example:
     # {'baseball':'Exercise:1','summer':'Exercise:1,California:1,Arizona:1','months':'Exercise:1,Discovery:3'}
-    # ...
-
     pipeline= [ 
         {'$unwind': {'path': '$terms'}}, 
         {'$project': {'term': '$terms.term',
@@ -112,6 +103,6 @@ def getIndex(col):
             if i != len(term['documents'])-1:
                 inverted_index+=", "
         inverted_index+="\n"
-        
+
     return inverted_index
 
