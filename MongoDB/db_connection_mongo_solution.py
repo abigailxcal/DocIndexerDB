@@ -1,14 +1,3 @@
-#-------------------------------------------------------------------------
-# AUTHOR: Abigail Calderon
-# FILENAME: db_connection_mongo_solution.py
-# SPECIFICATION: Interacts with the database
-# FOR: CS 4250- Assignment #2
-# TIME SPENT: 2 days
-#-----------------------------------------------------------*/
-
-#IMPORTANT NOTE: DO NOT USE ANY ADVANCED PYTHON LIBRARY TO COMPLETE THIS CODE SUCH AS numpy OR pandas. You have to work here only with
-# standard arrays
-
 from pymongo import MongoClient
 import datetime
 
@@ -34,7 +23,6 @@ def createDocument(col, docId, docText, docTitle, docDate, docCat):
     terms = [term.strip("!@#$%^&*()_+[]{};:'\"<>,.?/~`") for term in docText.lower().split(" ")]
     
     # create a dictionary to count how many times each term appears in the document.
-    # Use space " " as the delimiter character for terms and remember to lowercase them.
     term_count = dict([(term,terms.count(term)) for term in terms ])
     
     # create a list of dictionaries to include term objects. [{"term", count, num_char}]
@@ -78,7 +66,7 @@ def updateDocument(col, docId, docText, docTitle, docDate, docCat):
 
 def getIndex(col):
 
-    # Query the database to return the documents where each term occurs with their corresponding count. Output example:
+    # Query the database to return the documents where each term occurs with their corresponding count. 
     # {'baseball':'Exercise:1','summer':'Exercise:1,California:1,Arizona:1','months':'Exercise:1,Discovery:3'}
     pipeline= [ 
         {'$unwind': {'path': '$terms'}}, 

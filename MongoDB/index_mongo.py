@@ -1,11 +1,3 @@
-#-------------------------------------------------------------------------
-# AUTHOR: Abigail Calderon
-# FILENAME: index_mongo.py
-# SPECIFICATION: Directs user input to MongoDB operations
-# FOR: CS 4250- Assignment #2
-# TIME SPENT: 2 days
-#-----------------------------------------------------------*/
-
 from pymongo import MongoClient  # import mongo client to connect
 from db_connection_mongo_solution import *
 
