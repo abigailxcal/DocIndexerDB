@@ -1,13 +1,12 @@
-
 import psycopg2
 import string
 
 def connectDataBase():
     try:
         conn = psycopg2.connect(
-            dbname="abg",
+            dbname="",
             user="postgres",
-            password="Chevycins1!",
+            password="",
             host="localhost",
             port="5432"
         )
@@ -30,25 +29,18 @@ def createDocument(cur, docId, docText, docTitle, docDate, docCat):
         catId = cur.fetchone()[0]
 
         # 2 Insert the document in the database. For num_chars, discard the spaces and punctuation marks.
-        # num_chars = len(docText) - docText.count(' ') - docText.count("!@#$%^&*()_+[]{};:'\"<>,.?/~`")
         custom_punctuation = "!@#$%^&*()_+[]{};:'\"<>,.?/~`"  # Customize this list as needed
         num_chars = len(docText) - docText.count(' ') - sum(docText.count(p) for p in custom_punctuation)
 
         cur.execute("INSERT INTO Documents(doc_number, text, title, num_chars, date, category_id) VALUES (%s, %s, %s, %s, %s, %s)", (docId, docText, docTitle, num_chars, docDate, catId))
 
         # 3 Update the potential new terms.
-        # 3.1 Find all terms that belong to the document. Use space " " as the delimiter character for terms and Remember to lowercase terms and remove punctuation marks.
-        # 3.2 For each term identified, check if the term already exists in the database
-        # 3.3 In case the term does not exist, insert it into the database
         terms = set([term.strip(string.punctuation).lower() for term in docText.split()])
 
         for term in terms:
             cur.execute("INSERT INTO Terms(term, num_chars) VALUES (%s, %s) ON CONFLICT DO NOTHING",(term, len(term)))
 
         # 4 Update the index
-        # 4.1 Find all terms that belong to the document
-        # 4.2 Create a data structure the stores how many times (count) each term appears in the document
-        # 4.3 Insert the term and its corresponding count into the database
         for term in terms:
             count = docText.lower().count(term)
             cur.execute("INSERT INTO Document_term_relationship(doc_number, term, count) VALUES (%s, %s, %s)", (docId, term, count))
@@ -61,8 +53,6 @@ def createDocument(cur, docId, docText, docTitle, docDate, docCat):
 def deleteDocument(cur, docId):
     try:
         # 1 Query the index based on the document to identify terms
-        # 1.1 For each term identified, delete its occurrences in the index for that document
-        # 1.2 Check if there are no more occurrences of the term in another document. If this happens, delete the term from the database.
         cur.execute("SELECT term FROM INTO Document_term_relationship WHERE doc_number = %s", (docId,))
         terms = [row[0] for row in cur.fetchall()]
 
